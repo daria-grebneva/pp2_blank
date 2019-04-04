@@ -23,5 +23,19 @@ int main(int argc, char *argv[])
 		exit = ((input == "quit") || (input == "exit"));
 	}
 
+	auto allClients = bank->GetAllBankClients();
+
+	std::cout << "CLIENTS INFO" << std::endl;
+	unsigned amountBalance = 0;
+	for (auto client : allClients) 
+	{
+		auto balance = bank->GetClientBalance(client.GetId());
+		std::cout << "Id: " << client.GetId() << " Balance: " << balance << std::endl;
+		amountBalance += balance;
+	}
+
+	std::cout << "Amount of clients balances: " << amountBalance << std::endl;
+	std::cout << "Bank balance: " << bank->GetTotalBalance() << std::endl;
+
     return 0;
 }
