@@ -13,8 +13,14 @@ int main(int argc, char *argv[])
 	}
 
 	// TODO: WaitForMultipleObjects
-	while (true)
+	std::string input = "";
+	std::cin >> input;
+	bool exit = (input == "");
+
+	while (std::cin && !exit)
 	{
+		std::cin >> input;
+		exit = ((input == "quit") || (input == "exit"));
 	}
 
     return 0;
