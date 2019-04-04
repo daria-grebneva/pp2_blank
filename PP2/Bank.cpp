@@ -70,5 +70,5 @@ void CBank::SetTotalBalance(unsigned value)
 
 void CBank::SomeLongOperations()
 {
-	// TODO
+	Sleep(1000);
 }
