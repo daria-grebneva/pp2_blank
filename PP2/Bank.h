@@ -1,27 +1,48 @@
 #pragma once
+#include "BankClient.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <mutex>
 
-#include "BankClient.h"
+namespace Primitive
+{
+	enum Synchronization
+	{
+		CriticalSection,
+		Mutex
+	};
+}
+
 
 class CBank
 {
 public:
-	CBank();
+
+	CBank(int primitive);
+	~CBank();
+
 	CBankClient* CreateClient();
 	void UpdateClientBalance(CBankClient& client, int value);
 	std::vector<CBankClient> GetAllBankClients();
-	unsigned GetTotalBalance();
-	unsigned GetClientBalance(int clientId);
+	int GetTotalBalance();
+	int GetClientBalance(int clientId);
 	void SetClientBalance(int clientId, int value);
+	Primitive::Synchronization GetPrimitive();
 
 private:
 	std::vector<CBankClient> m_clients;
-	unsigned m_totalBalance;
-	std::map<unsigned, unsigned> m_clientBalance;
+	int m_totalBalance;
+	std::map<int, int> m_clientBalance;
+	Primitive::Synchronization m_primitive;
 
-	void SetTotalBalance(unsigned value);
+	void SetTotalBalance(int value);
 	void SomeLongOperations();
+
+	void StartSynchronization();
+	void StopSynchronization();
+
+	CRITICAL_SECTION csUpdateBalance;
+	std::mutex mutexUpdateBalance;
 };
