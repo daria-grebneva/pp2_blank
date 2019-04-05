@@ -2,8 +2,20 @@
 #include "Bank.h"
 #include "BankClient.h"
 
+void ShowUsage() 
+{
+	std::cout << "Params must be like: PP2.exe <number of clients> <number synchronization primitive>" << std::endl;
+	std::cout << "Params by default:" << std::endl;
+	std::cout << "clientsNumber = 2" << std::endl;
+	std::cout << "primitive = 0" << std::endl;
+}
+
 int main(int argc, char *argv[])
 {
+	if (std::string(argv[1]) == "/?")
+	{
+		ShowUsage();
+	}
 	int clientsNumber = (argc == 3) ? atoi(argv[1]) : 2;
 	int primitive = (argc == 3) ? atoi(argv[2]) : 0;
 
@@ -21,7 +33,14 @@ int main(int argc, char *argv[])
 	while (std::cin && !exit)
 	{
 		std::cin >> input;
-		exit = ((input == "quit") || (input == "exit"));
+		if (input == "/?")
+		{
+			ShowUsage();
+		}
+		else
+		{
+			exit = ((input == "quit") || (input == "exit"));
+		}
 	}
 
 	auto allClients = bank->GetAllBankClients();
@@ -34,7 +53,6 @@ int main(int argc, char *argv[])
 		std::cout << "Id: " << client.GetId() << " Balance: " << balance << std::endl;
 		amountBalance += balance;
 	}
-
 
 	std::cout << "Amount of clients balances: " << amountBalance << std::endl;
 	std::cout << "Bank balance: " << bank->GetTotalBalance() << std::endl;
