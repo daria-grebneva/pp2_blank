@@ -13,7 +13,7 @@ CBank::~CBank()
 	DeleteCriticalSection(&csUpdateBalance);
 }
 
-Primitive::Synchronization CBank::GetPrimitive() 
+Primitive::Synchronization CBank::GetPrimitive()
 {
 	return m_primitive;
 }
@@ -24,20 +24,22 @@ void CBank::StartSynchronization()
 	{
 	case (Primitive::Synchronization::CriticalSection):
 		EnterCriticalSection(&csUpdateBalance);
-	default:
+	case (Primitive::Synchronization::Mutex):
 		mutexUpdateBalance.lock();
+	default:
 		break;
 	}
 }
 
-void CBank::StopSynchronization() 
+void CBank::StopSynchronization()
 {
 	switch (CBank::GetPrimitive())
 	{
 	case (Primitive::Synchronization::CriticalSection):
 		LeaveCriticalSection(&csUpdateBalance);
-	default:
+	case (Primitive::Synchronization::Mutex):
 		mutexUpdateBalance.unlock();
+	default:
 		break;
 	}
 }
@@ -61,30 +63,30 @@ int CBank::GetTotalBalance()
 	return m_totalBalance;
 }
 
-int CBank::GetClientBalance(int id) 
+int CBank::GetClientBalance(int id)
 {
 	return m_clientBalance.at(id);
 }
 
-void CBank::SetClientBalance(int id, int value) 
+void CBank::SetClientBalance(int id, int value)
 {
 	auto it = m_clientBalance.find(id);
-	if (it != m_clientBalance.end()) 
+	if (it != m_clientBalance.end())
 	{
 		it->second += value;
 	}
-	else 
+	else
 	{
 		m_clientBalance.emplace(id, value);
 	}
 }
 
-void CBank::UpdateClientBalance(CBankClient &client, int value)
+void CBank::UpdateClientBalance(CBankClient& client, int value)
 {
 	StartSynchronization();
 	int totalBalance = GetTotalBalance();
 	std::cout << "Client " << client.GetId() << " initiates reading total balance. Total = " << totalBalance << "." << std::endl;
-	
+
 	SomeLongOperations();
 	totalBalance += value;
 	SetClientBalance(client.GetId(), value);
@@ -95,7 +97,8 @@ void CBank::UpdateClientBalance(CBankClient &client, int value)
 		<< ". Must be: " << GetTotalBalance() + value << "." << std::endl;
 
 	// Check correctness of transaction through actual total balance
-	if (totalBalance != GetTotalBalance() + value) {
+	if (totalBalance != GetTotalBalance() + value)
+	{
 		std::cout << "! ERROR !" << std::endl;
 	}
 

@@ -5,6 +5,7 @@
 void ShowUsage() 
 {
 	std::cout << "Params must be like: PP2.exe <number of clients> <number synchronization primitive>" << std::endl;
+	std::cout << "To not use synchronization primitive <number synchronization primitive> = 2" << std::endl;
 	std::cout << "Params by default:" << std::endl;
 	std::cout << "clientsNumber = 2" << std::endl;
 	std::cout << "primitive = 0" << std::endl;

@@ -11,7 +11,8 @@ namespace Primitive
 	enum Synchronization
 	{
 		CriticalSection,
-		Mutex
+		Mutex,
+		None
 	};
 }
 
